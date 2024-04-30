@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import CountdownTimer from "../components/CountdownTimer";
+import { paragraph } from "txtgen";
 
-const WordContainer = () => {
-  const initialText =
-    "Introduced in 2017, electoral bonds allowed individuals and corporate groups to donate unlimited amounts of money to any political party anonymously. Electoral bonds, under the electoral bond scheme, were purchased by donors in fixed denominations from SBI and handed over to any political party that could cash them.";
+const WordContainer = ({ isStart, setIsStart, timer }) => {
+
+  const [initialText, setInitialText] = useState(paragraph());
 
   const [consecutiveSpacesCount, setConsecutiveSpacesCount] = useState(0);
   const [lastCharacterEntered, setLastCharacterEntered] = useState(null);
@@ -29,6 +31,9 @@ const WordContainer = () => {
     }
   };
   const handleKeyDown = (e, index) => {
+    if (isStart === false) {
+      setIsStart(true);
+    }
     if (e.key === " ") {
       console.log("yes");
       if (lastCharacterEntered && lastCharacterEntered !== " ") {
@@ -50,9 +55,15 @@ const WordContainer = () => {
     setDisplayedWordGroups(wordGroups.slice(startingLine, startingLine + 3));
   }, [startingLine, consecutiveSpacesCount]);
 
+  useEffect(() => {
+    if (firstLineInputRef.current) {
+      firstLineInputRef.current.focus();
+    }
+  }, []);
   return (
     <div className="flex justify-center mt-12">
       <div className="w-[55%] h-52 flex-col justify-center items-center text-[24px] tracking-widest leading-relaxed">
+        {isStart && <CountdownTimer seconds={timer} />}
         {displayedWordGroups.map((group, groupIndex) => (
           <div key={groupIndex} className="mt-2">
             {group.map((word, wordIndex) => (
