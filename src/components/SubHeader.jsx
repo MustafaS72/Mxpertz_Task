@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TbReload } from "react-icons/tb";
 
 const SubHeader = ({ setTimer }) => {
-  const [selectedTimer, setSelectedTimer] = useState(null);
+  const [selectedTimer, setSelectedTimer] = useState(60);
 
   const handleTimerClick = (value) => {
     setSelectedTimer(value);

@@ -3,15 +3,13 @@ import CountdownTimer from "../components/CountdownTimer";
 import { paragraph } from "txtgen";
 
 const WordContainer = ({ isStart, setIsStart, timer }) => {
-
-  const [initialText, setInitialText] = useState(paragraph());
-
+  const [initialText] = useState(paragraph());
   const [consecutiveSpacesCount, setConsecutiveSpacesCount] = useState(0);
   const [lastCharacterEntered, setLastCharacterEntered] = useState(null);
   const [startingLine, setStartingLine] = useState(0);
   const words = initialText.split(" ");
   const firstLineInputRef = useRef(null);
-
+  const [correctWords, setCorrectWords] = useState(0);
   const wordGroups = [];
   for (let i = 0; i < words.length; i += 8) {
     wordGroups.push(words.slice(i, i + 8));
@@ -22,7 +20,6 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
   );
 
   const handleInputChange = (index, value) => {
-    console.log(index, value, consecutiveSpacesCount);
     const trimmedValue = value.trim();
     if (trimmedValue === "") {
       setLastCharacterEntered(" ");
@@ -31,27 +28,38 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
     }
   };
   const handleKeyDown = (e, index) => {
+    console.log(e);
     if (isStart === false) {
       setIsStart(true);
     }
     if (e.key === " ") {
-      console.log("yes");
       if (lastCharacterEntered && lastCharacterEntered !== " ") {
+        const typedWord = e.target.value.trim();
+        const words = typedWord.split(" ");
+        const lastTypedWord = words[words.length - 1];
+        const storedWord = displayedWordGroups[index][consecutiveSpacesCount];
+        if (lastTypedWord === storedWord) {
+          setCorrectWords((prev) => prev + 1);
+        }
         setConsecutiveSpacesCount((prevCount) => prevCount + 1);
+      }
+    } else if (e.code === "Backspace") {
+      if (lastCharacterEntered === " ") {
+        console.log("mohammed");
+        setConsecutiveSpacesCount((prevCount) => prevCount - 1);
       }
     }
   };
 
   useEffect(() => {
+    console.log("correct words", correctWords, consecutiveSpacesCount);
     if (consecutiveSpacesCount === 8) {
-      console.log("ha hogya");
       setStartingLine((prev) => prev + 1);
       setConsecutiveSpacesCount(0);
       if (firstLineInputRef.current) {
         firstLineInputRef.current.value = "";
       }
     }
-    console.log("startingline", startingLine);
     setDisplayedWordGroups(wordGroups.slice(startingLine, startingLine + 3));
   }, [startingLine, consecutiveSpacesCount]);
 
