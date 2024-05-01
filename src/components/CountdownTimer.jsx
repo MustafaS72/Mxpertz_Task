@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const CountdownTimer = ({ seconds }) => {
+const CountdownTimer = ({ seconds, setShowUserModal }) => {
   const [timeLeft, setTimeLeft] = useState(seconds);
 
   useEffect(() => {
@@ -9,6 +9,8 @@ const CountdownTimer = ({ seconds }) => {
         setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
       }, 1000);
       return () => clearInterval(timer);
+    } else {
+      setShowUserModal(true);
     }
   }, [timeLeft]);
 
