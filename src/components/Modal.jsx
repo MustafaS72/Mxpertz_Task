@@ -9,6 +9,7 @@ const Modal = ({
   InCorrectWords,
   wordsPerMinute,
   accuracy,
+  raw,
 }) => {
   return (
     <div
@@ -35,7 +36,7 @@ const Modal = ({
             className="modal-body px-4 py-2 overflow-y-auto"
             style={{ maxHeight: "420px" }}
           >
-            <p>Raw: {correctWords}</p>
+            <p>Raw: {raw}</p>
             <p>Accuracy: {accuracy}%</p>
             <p>WPM: {wordsPerMinute}</p>
             <p>Time: {timer}s</p>

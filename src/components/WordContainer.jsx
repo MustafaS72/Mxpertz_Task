@@ -11,7 +11,7 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
   const words = initialText.split(" ");
   const firstLineInputRef = useRef(null);
   const [correctWords, setCorrectWords] = useState(0);
-  const [InCorrectWords, setInCorrectWords] = useState(0);
+  const [inCorrectWords, setInCorrectWords] = useState(0);
   const [lastInputValue, setLastInputValue] = useState(null);
   const [lastSecond, setLastSecond] = useState(false);
   const [lastCorrectWordIndex, setLastCorrectWordIndex] = useState(null);
@@ -26,11 +26,12 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
   );
 
   const calculateWPMAndAccuracy = (correctWords, incorrectWords, timer) => {
-    const totalWordsTyped = correctWords + incorrectWords;
+    const totalWordsTyped = correctWords;
     const totalMinutes = timer / 60;
     const wordsPerMinute = Math.round(totalWordsTyped / totalMinutes);
+    const raw = Math.round((correctWords + incorrectWords) / totalMinutes);
     const accuracy = Math.round((correctWords / totalWordsTyped) * 100);
-    return { wordsPerMinute, accuracy };
+    return { wordsPerMinute, accuracy, raw };
   };
 
   const handleInputChange = (index, value) => {
@@ -65,7 +66,7 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
         ) {
           setCorrectWords((prev) => prev + 1);
           setLastCorrectWordIndex(index + consecutiveSpacesCount);
-          console.log(index + consecutiveSpacesCount);
+          console.log(index ,consecutiveSpacesCount);
         } else if (
           lastTypedWord !== storedWord &&
           index + consecutiveSpacesCount !== lastCorrectWordIndex
@@ -105,9 +106,9 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
     }
   }, []);
 
-  const { wordsPerMinute, accuracy } = calculateWPMAndAccuracy(
+  const { wordsPerMinute, accuracy, raw } = calculateWPMAndAccuracy(
     correctWords,
-    InCorrectWords,
+    inCorrectWords,
     timer
   );
   return (
@@ -118,10 +119,11 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
             showUserModal={showUserModal}
             setShowUserModal={setShowUserModal}
             correctWords={correctWords}
-            InCorrectWords={InCorrectWords}
+            InCorrectWords={inCorrectWords}
             timer={timer}
             wordsPerMinute={wordsPerMinute}
             accuracy={accuracy}
+            raw={raw}
           />
         )}
         {isStart && (
@@ -130,7 +132,14 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
         {displayedWordGroups.map((group, groupIndex) => (
           <div key={groupIndex} className="mt-2">
             {group.map((word, wordIndex) => (
-              <span key={wordIndex} className="mt-2">
+              <span
+                key={wordIndex}
+                className={`mt-2 ${
+                  groupIndex === 0 && wordIndex === consecutiveSpacesCount
+                    ? "text-yellow-300"
+                    : ""
+                }`}
+              >
                 {word}{" "}
               </span>
             ))}
