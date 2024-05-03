@@ -5,15 +5,29 @@ import WordContainer from "../components/WordContainer";
 import Result from "./Result";
 
 const Home = () => {
-  const [timer, setTimer] = useState(1);
+  const [timer, setTimer] = useState(60);
   const [isStart, setIsStart] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [isRefresh, setIsRefresh] = useState(false);
   const [typingData, setTypingData] = useState([]);
-
+  const [correctWords, setCorrectWords] = useState(0);
+  const [inCorrectWords, setInCorrectWords] = useState(0);
+  const [wpm, setWpm] = useState(0);
+  const [accuracy, setAccuracy] = useState(0);
+  const [raw, setRaw] = useState(0);
   console.log("timer", timer, isStart);
   if (showUserModal) {
-    return <Result typingData={typingData} />;
+    return (
+      <Result
+        typingData={typingData}
+        timer={timer}
+        raw={raw}
+        wpm={wpm}
+        accuracy={accuracy}
+        correctWords={correctWords}
+        inCorrectWords={inCorrectWords}
+      />
+    );
   }
 
   return (
@@ -36,6 +50,13 @@ const Home = () => {
         setIsRefresh={setIsRefresh}
         typingData={typingData}
         setTypingData={setTypingData}
+        correctWords={correctWords}
+        setCorrectWords={setCorrectWords}
+        inCorrectWords={inCorrectWords}
+        setInCorrectWords={setInCorrectWords}
+        setWpm={setWpm}
+        setAccuracy={setAccuracy}
+        setRaw={setRaw}
       />
     </>
   );

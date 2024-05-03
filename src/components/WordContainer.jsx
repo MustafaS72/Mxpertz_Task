@@ -12,6 +12,13 @@ const WordContainer = ({
   isRefresh,
   setTypingData,
   typingData,
+  correctWords,
+  setCorrectWords,
+  inCorrectWords,
+  setInCorrectWords,
+  setRaw,
+  setWpm,
+  setAccuracy,
 }) => {
   const [initialText, setInitialText] = useState(paragraph());
   const [consecutiveSpacesCount, setConsecutiveSpacesCount] = useState(0);
@@ -19,8 +26,6 @@ const WordContainer = ({
   const [startingLine, setStartingLine] = useState(0);
   const words = initialText.split(" ");
   const firstLineInputRef = useRef(null);
-  const [correctWords, setCorrectWords] = useState(0);
-  const [inCorrectWords, setInCorrectWords] = useState(0);
   const [lastInputValue, setLastInputValue] = useState(null);
   const [lastSecond, setLastSecond] = useState(false);
   const [lastCorrectWordIndex, setLastCorrectWordIndex] = useState(null);
@@ -111,11 +116,6 @@ const WordContainer = ({
     }
   }, []);
 
-  const { wordsPerMinute, accuracy, raw } = calculateWPMAndAccuracy(
-    correctWords,
-    inCorrectWords,
-    timer
-  );
   useEffect(() => {
     if (isRefresh) {
       setInitialText(paragraph());
@@ -144,6 +144,16 @@ const WordContainer = ({
     }
   }, [isStart, showUserModal, correctWords, inCorrectWords, timer, typingData]);
 
+  useEffect(() => {
+    const { wordsPerMinute, accuracy, raw } = calculateWPMAndAccuracy(
+      correctWords,
+      inCorrectWords,
+      timer
+    );
+    setAccuracy(accuracy);
+    setRaw(raw);
+    setWpm(wordsPerMinute);
+  }, [consecutiveSpacesCount]);
   return (
     <div className="flex justify-center mt-12">
       <div className="w-[55%] h-52 flex-col justify-center items-center text-[24px] tracking-widest leading-relaxed">

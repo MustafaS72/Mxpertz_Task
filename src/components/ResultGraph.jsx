@@ -33,6 +33,11 @@ const ResultGraph = ({ chartData }) => {
             beginAtZero: true,
           },
         },
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
       },
     };
 
@@ -48,7 +53,7 @@ const ResultGraph = ({ chartData }) => {
   return (
     <canvas
       ref={chartRef}
-      className="w-full shadow-sm shadow-gray-700"
+      className="w-full"
     ></canvas>
   );
 };
