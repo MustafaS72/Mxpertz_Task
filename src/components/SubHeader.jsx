@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { TbReload } from "react-icons/tb";
+import CountdownTimer from "../components/CountdownTimer";
 
-const SubHeader = ({ setTimer }) => {
+const SubHeader = ({
+  setTimer,
+  timer,
+  isStart,
+  setShowUserModal,
+  setIsRefresh,
+}) => {
   const [selectedTimer, setSelectedTimer] = useState(60);
 
   const handleTimerClick = (value) => {
@@ -11,9 +18,15 @@ const SubHeader = ({ setTimer }) => {
 
   return (
     <div className="flex justify-center mt-4 ">
-      <div className="bg-neutral-700 w-[40%] h-10 rounded-md flex gap-8 items-center p-2 text-gray-500 cursor-pointer justify-center shadow-sm shadow-neutral-700">
-        <p>Numbers</p>
-        <p>@ Punctuation</p>
+      <div className="bg-neutral-700 w-[25%] h-10 rounded-md flex gap-8 items-center p-2 text-gray-500 cursor-pointer justify-center shadow-sm shadow-neutral-700">
+        {isStart && (
+          <p className="font-bold text-yellow-300">
+            <CountdownTimer
+              seconds={timer}
+              setShowUserModal={setShowUserModal}
+            />
+          </p>
+        )}
         <p
           onClick={() => handleTimerClick(15)}
           style={{ color: selectedTimer === 15 ? "yellow" : "inherit" }}
@@ -38,7 +51,12 @@ const SubHeader = ({ setTimer }) => {
         >
           120
         </p>
-        <p>
+        <p>|</p>
+        <p
+          onClick={() => {
+            setIsRefresh(true);
+          }}
+        >
           <TbReload />
         </p>
       </div>

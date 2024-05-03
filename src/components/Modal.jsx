@@ -37,7 +37,7 @@ const Modal = ({
             style={{ maxHeight: "420px" }}
           >
             <p>Raw: {raw}</p>
-            <p>Accuracy: {accuracy}%</p>
+            <p>Accuracy: {accuracy ? accuracy : 0}%</p>
             <p>WPM: {wordsPerMinute}</p>
             <p>Time: {timer}s</p>
             <p>Incorrect: {InCorrectWords}</p>

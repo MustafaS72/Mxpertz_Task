@@ -1,10 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import CountdownTimer from "../components/CountdownTimer";
 import { paragraph } from "txtgen";
 import Modal from "./Modal";
 
-const WordContainer = ({ isStart, setIsStart, timer }) => {
-  const [initialText] = useState(paragraph());
+const WordContainer = ({
+  isStart,
+  setIsStart,
+  timer,
+  setShowUserModal,
+  showUserModal,
+  setIsRefresh,
+  isRefresh,
+}) => {
+  console.log("component rendered-0---", isRefresh);
+  const [initialText, setInitialText] = useState(paragraph());
   const [consecutiveSpacesCount, setConsecutiveSpacesCount] = useState(0);
   const [lastCharacterEntered, setLastCharacterEntered] = useState(null);
   const [startingLine, setStartingLine] = useState(0);
@@ -15,7 +23,7 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
   const [lastInputValue, setLastInputValue] = useState(null);
   const [lastSecond, setLastSecond] = useState(false);
   const [lastCorrectWordIndex, setLastCorrectWordIndex] = useState(null);
-  const [showUserModal, setShowUserModal] = useState(false);
+  const [inCorrectWordsIndex, setInCorrectWordsIndex] = useState([]);
   const wordGroups = [];
   for (let i = 0; i < words.length; i += 8) {
     wordGroups.push(words.slice(i, i + 8));
@@ -66,12 +74,15 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
         ) {
           setCorrectWords((prev) => prev + 1);
           setLastCorrectWordIndex(index + consecutiveSpacesCount);
-          console.log(index ,consecutiveSpacesCount);
+          console.log(index, consecutiveSpacesCount);
         } else if (
           lastTypedWord !== storedWord &&
           index + consecutiveSpacesCount !== lastCorrectWordIndex
         ) {
-          setInCorrectWords((prev) => prev + 1);
+          setInCorrectWordsIndex((prev) => [
+            ...prev,
+            index * 8 + consecutiveSpacesCount,
+          ]);
         }
         setConsecutiveSpacesCount((prevCount) => prevCount + 1);
       }
@@ -93,6 +104,7 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
     if (consecutiveSpacesCount === 8) {
       setStartingLine((prev) => prev + 1);
       setConsecutiveSpacesCount(0);
+      setInCorrectWordsIndex([]);
       if (firstLineInputRef.current) {
         firstLineInputRef.current.value = "";
       }
@@ -111,6 +123,14 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
     inCorrectWords,
     timer
   );
+  useEffect(() => {
+    if (isRefresh) {
+      console.log("isRefresh", isRefresh);
+      setInitialText(paragraph());
+      setIsRefresh(false);
+    }
+  }, [isRefresh, initialText]);
+
   return (
     <div className="flex justify-center mt-12">
       <div className="w-[55%] h-52 flex-col justify-center items-center text-[24px] tracking-widest leading-relaxed">
@@ -126,23 +146,28 @@ const WordContainer = ({ isStart, setIsStart, timer }) => {
             raw={raw}
           />
         )}
-        {isStart && (
-          <CountdownTimer seconds={timer} setShowUserModal={setShowUserModal} />
-        )}
+
         {displayedWordGroups.map((group, groupIndex) => (
           <div key={groupIndex} className="mt-2">
-            {group.map((word, wordIndex) => (
-              <span
-                key={wordIndex}
-                className={`mt-2 ${
-                  groupIndex === 0 && wordIndex === consecutiveSpacesCount
-                    ? "text-yellow-300"
-                    : ""
-                }`}
-              >
-                {word}{" "}
-              </span>
-            ))}
+            {group.map((word, wordIndex) => {
+              const wordPosition = groupIndex * 8 + wordIndex;
+              return (
+                <span
+                  key={`${groupIndex}-${wordIndex}`}
+                  className={`mt-2 ${
+                    groupIndex === 0 && wordIndex === consecutiveSpacesCount
+                      ? "text-yellow-300"
+                      : ""
+                  } ${
+                    inCorrectWordsIndex.includes(wordPosition)
+                      ? "text-red-500"
+                      : ""
+                  }`}
+                >
+                  {word}{" "}
+                </span>
+              );
+            })}
             <input
               ref={groupIndex === 0 ? firstLineInputRef : null}
               type="text"

@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/images/logo.png";
+import logo from "../assets/images/logo1.png";
 const Header = () => {
   return (
     <div className=" w-full h-24 p-4 flex justify-between mt-4">
