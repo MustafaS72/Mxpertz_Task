@@ -10,8 +10,9 @@ const WordContainer = ({
   showUserModal,
   setIsRefresh,
   isRefresh,
+  setTypingData,
+  typingData,
 }) => {
-  console.log("component rendered-0---", isRefresh);
   const [initialText, setInitialText] = useState(paragraph());
   const [consecutiveSpacesCount, setConsecutiveSpacesCount] = useState(0);
   const [lastCharacterEntered, setLastCharacterEntered] = useState(null);
@@ -34,9 +35,10 @@ const WordContainer = ({
   );
 
   const calculateWPMAndAccuracy = (correctWords, incorrectWords, timer) => {
-    const totalWordsTyped = correctWords;
+    const actualwords = correctWords;
     const totalMinutes = timer / 60;
-    const wordsPerMinute = Math.round(totalWordsTyped / totalMinutes);
+    const totalWordsTyped = correctWords + incorrectWords;
+    const wordsPerMinute = Math.round(actualwords / totalMinutes);
     const raw = Math.round((correctWords + incorrectWords) / totalMinutes);
     const accuracy = Math.round((correctWords / totalWordsTyped) * 100);
     return { wordsPerMinute, accuracy, raw };
@@ -45,10 +47,8 @@ const WordContainer = ({
   const handleInputChange = (index, value) => {
     setLastInputValue(value[value.length - 1]);
     if (value[value.length - 2] === " " && lastInputValue) {
-      console.log("in first ");
       setLastSecond(true);
     } else if (value[value.length - 2] !== " " && lastInputValue) {
-      console.log("in second");
       setLastSecond(false);
     }
     const trimmedValue = value.trim();
@@ -74,7 +74,6 @@ const WordContainer = ({
         ) {
           setCorrectWords((prev) => prev + 1);
           setLastCorrectWordIndex(index + consecutiveSpacesCount);
-          console.log(index, consecutiveSpacesCount);
         } else if (
           lastTypedWord !== storedWord &&
           index + consecutiveSpacesCount !== lastCorrectWordIndex
@@ -83,24 +82,18 @@ const WordContainer = ({
             ...prev,
             index * 8 + consecutiveSpacesCount,
           ]);
+          setInCorrectWords((prev) => prev + 1);
         }
         setConsecutiveSpacesCount((prevCount) => prevCount + 1);
       }
     } else if (e.code === "Backspace") {
       if (lastInputValue === " " && !lastSecond) {
-        console.log("mohammed");
         setConsecutiveSpacesCount((prevCount) => prevCount - 1);
       }
     }
   };
 
   useEffect(() => {
-    console.log(
-      "correct words",
-      correctWords,
-      "consecutiveSpacesCount",
-      consecutiveSpacesCount
-    );
     if (consecutiveSpacesCount === 8) {
       setStartingLine((prev) => prev + 1);
       setConsecutiveSpacesCount(0);
@@ -125,11 +118,31 @@ const WordContainer = ({
   );
   useEffect(() => {
     if (isRefresh) {
-      console.log("isRefresh", isRefresh);
       setInitialText(paragraph());
       setIsRefresh(false);
     }
   }, [isRefresh, initialText]);
+
+  useEffect(() => {
+    console.log(isStart, showUserModal);
+    if (isStart && !showUserModal) {
+      const trackTypingPerformance = () => {
+        const { wordsPerMinute, accuracy, raw } = calculateWPMAndAccuracy(
+          correctWords,
+          inCorrectWords,
+          timer
+        );
+
+        console.log("typingdata", typingData, "WPM", wordsPerMinute);
+        setTypingData((prevData) => [
+          ...prevData,
+          { time: prevData.length + 1, wpm: wordsPerMinute },
+        ]);
+      };
+      const intervalId = setInterval(trackTypingPerformance, 1000);
+      return () => clearInterval(intervalId);
+    }
+  }, [isStart, showUserModal, correctWords, inCorrectWords, timer, typingData]);
 
   return (
     <div className="flex justify-center mt-12">
