@@ -12,7 +12,13 @@ const Result = ({
   correctWords,
   accuracy,
   timer,
+  setShowUserModal,
+  setIsStart,
 }) => {
+  const handleRestart = () => {
+    setShowUserModal(false);
+    setIsStart(false);
+  };
   return (
     <>
       <Header />
@@ -29,7 +35,12 @@ const Result = ({
         </div>
       </div>
       <div className="flex justify-center mt-8 ">
-        <button className="button-13 text-md font-semibold px-4 py-1">Retake</button>
+        <button
+          className="button-13 text-md font-semibold px-4 py-1"
+          onClick={handleRestart}
+        >
+          Retake
+        </button>
       </div>
     </>
   );

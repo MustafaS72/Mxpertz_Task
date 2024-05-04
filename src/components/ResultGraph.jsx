@@ -19,7 +19,6 @@ const ResultGraph = ({ chartData }) => {
         labels: chartData.map((data) => data.time),
         datasets: [
           {
-            backgroundColor: "",
             data: chartData.map((data) => data.wpm),
             borderColor: "yellow",
             borderWidth: 1,
@@ -50,12 +49,7 @@ const ResultGraph = ({ chartData }) => {
     };
   }, [chartData]);
 
-  return (
-    <canvas
-      ref={chartRef}
-      className="w-full"
-    ></canvas>
-  );
+  return <canvas ref={chartRef} className="w-full"></canvas>;
 };
 
 export default ResultGraph;

@@ -26,6 +26,8 @@ const Home = () => {
         accuracy={accuracy}
         correctWords={correctWords}
         inCorrectWords={inCorrectWords}
+        setShowUserModal={setShowUserModal}
+        setIsStart={setIsStart}
       />
     );
   }
