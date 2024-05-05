@@ -156,7 +156,7 @@ const WordContainer = ({
   }, [consecutiveSpacesCount]);
   return (
     <div className="flex justify-center mt-12">
-      <div className="w-[55%] h-52 flex-col justify-center items-center text-[24px] tracking-widest leading-relaxed">
+      <div className="w-[85%] sm:w-[55%] h-52 flex-col justify-center items-center text-[24px] tracking-widest leading-relaxed">
         {showUserModal && (
           <Modal
             showUserModal={showUserModal}
