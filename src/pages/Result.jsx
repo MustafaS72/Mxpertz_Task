@@ -15,10 +15,10 @@ const Result = ({
   setShowUserModal,
   setIsStart,
 }) => {
-  const handleRestart=()=>{
+  const handleRestart = () => {
     setShowUserModal(false);
     setIsStart(false);
-  }
+  };
   return (
     <>
       <Header />

@@ -12,14 +12,19 @@ const CountdownTimer = ({ seconds, setShowUserModal }) => {
     } else {
       setShowUserModal(true);
     }
-  }, [timeLeft]);
+  }, [timeLeft, setShowUserModal]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
-  return <div>{formatTime(timeLeft)}</div>;
+
+  return (
+    <div className={timeLeft > 5 ? "text-yellow-300" : "text-red-600"}>
+      {formatTime(timeLeft)}
+    </div>
+  );
 };
 
 export default CountdownTimer;

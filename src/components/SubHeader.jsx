@@ -18,9 +18,9 @@ const SubHeader = ({
 
   return (
     <div className="flex justify-center mt-4 ">
-      <div className="sm:bg-neutral-700 w-[25%] h-10 rounded-md flex gap-8 items-center p-2 text-gray-500 cursor-pointer justify-center sm:shadow-sm sm:shadow-neutral-700">
+      <div className="sm:bg-neutral-700 w-[20%] h-10 rounded-md flex gap-8 items-center p-2 text-gray-500 cursor-pointer justify-center sm:shadow-sm sm:shadow-neutral-700">
         {isStart && (
-          <p className="font-bold text-yellow-300">
+          <p className="font-bold">
             <CountdownTimer
               seconds={timer}
               setShowUserModal={setShowUserModal}
@@ -50,14 +50,6 @@ const SubHeader = ({
           style={{ color: selectedTimer === 120 ? "yellow" : "inherit" }}
         >
           120
-        </p>
-        <p>|</p>
-        <p
-          onClick={() => {
-            setIsRefresh(true);
-          }}
-        >
-          <TbReload />
         </p>
       </div>
     </div>
